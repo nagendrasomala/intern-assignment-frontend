@@ -3,8 +3,8 @@ import axios from 'axios';
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import api from '../assets/api';
-import { toast, ToastContainer } from 'react-toastify'; // Import toast functions
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
+import { toast, ToastContainer } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyC2vUnL2GpMz7oSMKZEBz1sqPNGYuA0w4A",
@@ -31,7 +31,6 @@ const EmployeeCreatePage = () => {
     const [errors, setErrors] = useState({});
     const [emailExists, setEmailExists] = useState(false);
 
-    // Email duplicate check
     const checkEmailDuplicate = async (email) => {
         try {
             const response = await api.get(`/admin/check-email?email=${email}`);
@@ -41,7 +40,6 @@ const EmployeeCreatePage = () => {
         }
     };
 
-    // Handling input changes
     const handleEmailChange = (e) => {
         setFormData({ ...formData, f_Email: e.target.value });
         checkEmailDuplicate(e.target.value);
@@ -50,7 +48,6 @@ const EmployeeCreatePage = () => {
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         if (type === 'checkbox') {
-            // Handle checkbox changes for courses
             setFormData((prevData) => {
                 const courses = prevData.f_Course.includes(value)
                     ? prevData.f_Course.filter((course) => course !== value)
@@ -58,38 +55,35 @@ const EmployeeCreatePage = () => {
                 return { ...prevData, f_Course: courses };
             });
         } else if (name === "f_Image") {
-            // Handle file input change
             setFormData({ ...formData, f_Image: e.target.files[0] });
         } else {
             setFormData({ ...formData, [name]: value });
         }
     };
 
-    // Firebase file upload
+
     const uploadFileToFirebase = async (file) => {
         if (!file) return null;
         const storageRef = ref(storage, `uploads/${file.name}`);
         try {
             await uploadBytes(storageRef, file);
             const fileUrl = await getDownloadURL(storageRef);
-            return fileUrl;  // Return the URL for the uploaded file
+            return fileUrl;
         } catch (error) {
             console.error('Error uploading file to Firebase:', error);
             throw new Error('File upload failed');
         }
     };
 
-    // Form submission with validation
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Frontend validation
         let formErrors = {};
-        
-        // Regex patterns
-        const nameRegex = /^[A-Za-z ]{2,}$/; // At least 2 letters, space allowed
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Valid email format
-        const mobileRegex = /^\d{10}$/; // 10 digits
+
+        const nameRegex = /^[A-Za-z ]{2,}$/; 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+        const mobileRegex = /^\d{10}$/;
 
         if (!formData.f_Name || !nameRegex.test(formData.f_Name)) 
             formErrors.f_Name = "Valid name is required";
@@ -111,15 +105,13 @@ const EmployeeCreatePage = () => {
             return;
         }
 
-        // Upload image to Firebase
         let imageUrl = '';
         if (formData.f_Image) {
             imageUrl = await uploadFileToFirebase(formData.f_Image);
         }
 
-        // Prepare data for submission
         const dataToSubmit = {
-            f_Image: imageUrl,  // Firebase URL stored as a string
+            f_Image: imageUrl,  
             f_Name: formData.f_Name,
             f_Email: formData.f_Email,
             f_Mobile: formData.f_Mobile,
@@ -129,22 +121,22 @@ const EmployeeCreatePage = () => {
         };
 
         try {
-            const token = localStorage.getItem('token');  // Get token from local storage
+            const token = localStorage.getItem('token');  
             const response = await api.post('/admin/create-employees', dataToSubmit, {
                 headers: {
-                    Authorization: `Bearer ${token}`  // Include token in headers
+                    Authorization: `Bearer ${token}` 
                 }
             });
             console.log('Employee created successfully:', response.data);
-            toast.success('Employee created successfully!'); // Success toast
-            resetForm(); // Reset the form fields
+            toast.success('Employee created successfully!');
+            resetForm(); 
         } catch (error) {
             console.error('Error creating employee:', error);
-            toast.error('Error creating employee! Please try again.'); // Error toast
+            toast.error('Error creating employee! Please try again.'); 
         }
     };
 
-    // Reset the form fields
+  
     const resetForm = () => {
         setFormData({
             f_Name: '',
@@ -155,8 +147,8 @@ const EmployeeCreatePage = () => {
             f_Course: [],
             f_Image: null,
         });
-        setErrors({}); // Clear any previous errors
-        setEmailExists(false); // Reset email existence status
+        setErrors({}); 
+        setEmailExists(false); 
     };
 
     return (

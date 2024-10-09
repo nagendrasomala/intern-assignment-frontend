@@ -6,7 +6,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';  
 import { useNavigate } from 'react-router-dom';
 
-// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyC2vUnL2GpMz7oSMKZEBz1sqPNGYuA0w4A",
     authDomain: "employee-management-9ad9d.firebaseapp.com",
@@ -40,18 +39,16 @@ const EmployeeEditPage = ({ employeeId, onBack }) => {
             try {
                 const response = await api.post(`/admin/get-employee`, { employeeId });                
                 if (response.data) {
-                    // Destructure based on the actual API response
                     const { 
                         name: f_Name, 
                         email: f_Email, 
                         mobile: f_Mobile, 
                         designation: f_Designation, 
                         gender: f_gender, 
-                        course: f_Course = [], // Ensure it defaults to an empty array
+                        course: f_Course = [], 
                         image: f_Image 
                     } = response.data;
     
-                    // Set formData with the correctly destructured values
                     setFormData({
                         f_Name,
                         f_Email,
@@ -79,8 +76,6 @@ const EmployeeEditPage = ({ employeeId, onBack }) => {
         }
     }, [employeeId]);
     
-    
-    // Email duplicate check
     const checkEmailDuplicate = async (email) => {
         try {
             const response = await api.get(`/admin/check-email?email=${email}`);
@@ -90,7 +85,6 @@ const EmployeeEditPage = ({ employeeId, onBack }) => {
         }
     };
 
-    // Handling input changes
     const handleEmailChange = (e) => {
         const email = e.target.value;
         setFormData((prevData) => ({ ...prevData, f_Email: email }));
@@ -113,12 +107,9 @@ const EmployeeEditPage = ({ employeeId, onBack }) => {
         }
     };
 
-    // Firebase file upload
+
     const uploadFileToFirebase = async (file) => {
         if (!file) return null;
-
-        // Optional: Validate file type and size here
-
         const storageRef = ref(storage, `uploads/${file.name}`);
         try {
             await uploadBytes(storageRef, file);
@@ -130,12 +121,11 @@ const EmployeeEditPage = ({ employeeId, onBack }) => {
         }
     };
 
-    // Form submission with validation
+
 const handleSubmit = async (e) => {
     e.preventDefault();
     let formErrors = {};
 
-    // Regex patterns
     const nameRegex = /^[A-Za-z ]{2,}$/; 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
     const mobileRegex = /^\d{10}$/; 
@@ -160,14 +150,11 @@ const handleSubmit = async (e) => {
         return;
     }
 
-    // Check if a new image is selected; if not, use the previous image URL
     let imageUrl;
     if (formData.f_Image && formData.f_Image instanceof File) {
-        // Upload the new image to Firebase if a new image is selected
         imageUrl = await uploadFileToFirebase(formData.f_Image);
     } else {
-        // Use the existing image URL from the formData (fetched from the employee data)
-        imageUrl = formData.f_Image; // This should contain the previous image URL
+        imageUrl = formData.f_Image;
     }
 
     const dataToSubmit = {
@@ -198,7 +185,6 @@ const handleSubmit = async (e) => {
 };
 
 
-    // Reset the form fields
     const resetForm = () => {
         setFormData({
             f_Name: '',

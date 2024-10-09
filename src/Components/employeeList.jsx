@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EmployeeCreatePage from './createEmployee';
-import EmployeeEditPage from './editPage'; // Import the edit component
+import EmployeeEditPage from './editPage'; 
 import api from '../assets/api';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,7 +11,7 @@ const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [isCreatingEmployee, setIsCreatingEmployee] = useState(false); 
-  const [editingEmployeeId, setEditingEmployeeId] = useState(null); // State to hold the employee id being edited
+  const [editingEmployeeId, setEditingEmployeeId] = useState(null); 
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -67,7 +67,7 @@ const EmployeeList = () => {
 
   const handleBackToListClick = () => {
     setIsCreatingEmployee(false); 
-    setEditingEmployeeId(null); // Reset the editing employee id
+    setEditingEmployeeId(null); 
   };
 
   const formatDate = (dateString) => {
@@ -87,7 +87,7 @@ const EmployeeList = () => {
     <div className="p-4">
       {isCreatingEmployee ? (
         <EmployeeCreatePage />
-      ) : editingEmployeeId ? ( // Render the edit component if editing
+      ) : editingEmployeeId ? ( 
         <EmployeeEditPage employeeId={editingEmployeeId} onBack={handleBackToListClick} />
       ) : (
         <>

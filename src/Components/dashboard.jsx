@@ -1,40 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import EmployeeList from './employeeList'; 
 import HomePage from './homePage';
 
 const Dashboard = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate(); 
   const [page, setPage] = useState('home');
   const [username, setUsername] = useState('');
 
-  // Fetch the username from localStorage when the component loads
   useEffect(() => {
     const nameFromStorage = localStorage.getItem('name');
-    const pageFromStorage = localStorage.getItem('currentPage'); // Get the current page from localStorage
+    const pageFromStorage = localStorage.getItem('currentPage'); 
     if (nameFromStorage) {
       setUsername(nameFromStorage);
     }
     if (pageFromStorage) {
-      setPage(pageFromStorage); // Set the page to the value stored in localStorage
+      setPage(pageFromStorage); 
     }
   }, []);
 
-  // Handle logout by clearing the token from localStorage and navigating to login page
+  
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('name');
-    navigate('/'); // Navigate to the login page
+    navigate('/'); 
   };
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-    localStorage.setItem('currentPage', newPage); // Store the current page in localStorage
+    localStorage.setItem('currentPage', newPage);
   };
 
   return (
     <div className="flex flex-col h-screen">
-      {/* Header */}
+
       <div className="bg-blue-200 flex flex-row justify-between items-center p-2">
         <div className="text-lg font-bold">Logo</div>
         <div className='flex flex-row justify-between gap-3'>
@@ -49,7 +48,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+
       <div className="flex-grow">
         {page === 'home' && <HomePage />}
         {page === 'employeeList' && <EmployeeList />}
